@@ -186,36 +186,24 @@ class FirestoreCRUDPageState extends State<FirestoreCRUDPage> {
 
   Card buildItem(DocumentSnapshot doc) {
     return Card(
+      elevation: 0,
+      color: Colors.transparent,
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(3),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              'name: ${doc.data['name']}',
-              style: TextStyle(fontSize: 24),
-            ),
-            Text(
-              'param2: ${doc.data['param2']}',
-              style: TextStyle(fontSize: 20),
+              'name: ${doc.data['name']}' +
+                  '        ' +
+                  'param2: ${doc.data['param2']}' +
+                  '        ' +
+                  'param2: ${doc.data['param3']}' +
+                  '        ' +
+                  'param2: ${doc.data['param4']}',
+              style: TextStyle(fontSize: 12),
             ),
             SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                FlatButton(
-                  onPressed: () => updateData(doc),
-                  child: Text('Update todo',
-                      style: TextStyle(color: Colors.white)),
-                  color: Colors.green,
-                ),
-                SizedBox(width: 8),
-                FlatButton(
-                  onPressed: () => deleteData(doc),
-                  child: Text('Delete'),
-                ),
-              ],
-            )
           ],
         ),
       ),
