@@ -1,9 +1,5 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
-
-import 'package:csv/csv.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:grizzly_io/io_loader.dart';
@@ -35,7 +31,8 @@ class FirestoreCRUDPageState extends State<FirestoreCRUDPage> {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.teal[200],
-        title: Text('Firestore Table',style:TextStyle(fontStyle: FontStyle.italic,letterSpacing: 5)),
+        title: Text('Firestore Table',
+            style: TextStyle(fontStyle: FontStyle.italic, letterSpacing: 5)),
       ),
       body: ListView(
         padding: EdgeInsets.all(8),
@@ -47,16 +44,6 @@ class FirestoreCRUDPageState extends State<FirestoreCRUDPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              RaisedButton(
-                onPressed: createData,
-                child: Text('Create', style: TextStyle(color: Colors.white)),
-                color: Colors.green,
-              ),
-              RaisedButton(
-                onPressed: id != null ? readData : null,
-                child: Text('Read', style: TextStyle(color: Colors.white)),
-                color: Colors.blue,
-              ),
               RaisedButton(
                 child: Text('CSV', style: TextStyle(color: Colors.white)),
                 color: Colors.black,
@@ -85,8 +72,7 @@ class FirestoreCRUDPageState extends State<FirestoreCRUDPage> {
                     Column(
                         children: snapshot.data.documents
                             .map((doc) => buildItem(doc))
-                            .toList()
-                    ),
+                            .toList()),
                   ],
                 );
               } else {
@@ -101,17 +87,6 @@ class FirestoreCRUDPageState extends State<FirestoreCRUDPage> {
         child: Icon(Icons.cloud_upload),
       ),
     );
-  }
-
-  void createData() async {
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
-      DocumentReference ref = await db
-          .collection('CRUD')
-          .add({'name': '$name 😎', 'todo': randomTodo()});
-      setState(() => id = ref.documentID);
-      print(ref.documentID);
-    }
   }
 
   void csvUpload() async {
@@ -139,165 +114,66 @@ class FirestoreCRUDPageState extends State<FirestoreCRUDPage> {
     }
   }
 
-  void readData() async {
-    DocumentSnapshot snapshot = await db.collection('CRUD').document(id).get();
-    print(snapshot.data['name']);
-  }
-
-  void updateData(DocumentSnapshot doc) async {
-    await db
-        .collection('CRUD')
-        .document(doc.documentID)
-        .updateData({'todo': 'please 🤫'});
-  }
-
   void deleteData(DocumentSnapshot doc) async {
     await db.collection('CRUD').document(doc.documentID).delete();
     setState(() => id = null);
   }
 
-  String randomTodo() {
-    final randomNumber = Random().nextInt(4);
-    String todo;
-    switch (randomNumber) {
-      case 1:
-        todo = 'Like and subscribe 💩';
-        break;
-      case 2:
-        todo = 'Twitter @robertbrunhage 🤣';
-        break;
-      case 3:
-        todo = 'Patreon in the description 🤗';
-        break;
-      default:
-        todo = 'Leave a comment 🤓';
-        break;
-    }
-    return todo;
+  Widget buildItem(DocumentSnapshot doc) {
+    return Container(
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+          border: Border.all(
+            color: Colors.grey,
+            width: 0.5,
+          ),
+          borderRadius: BorderRadius.circular(1.2),
+        ),
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            textDirection: TextDirection.ltr,
+            children: <Widget>[
+              (Text(
+                "${doc.data['name']}",
+              )),
+              (Text("${doc.data['param2']}")),
+              (Text("${doc.data['param3']}")),
+              (Text("${doc.data['param4']}")),
+            ]));
   }
 
-  TextFormField buildTextFormField() {
-    return TextFormField(
-      decoration: InputDecoration(
-        border: InputBorder.none,
-        hintText: 'name',
-        fillColor: Colors.grey[300],
-        filled: true,
-      ),
-      validator: (value) {
-        if (value.isEmpty) {
-          return 'Please enter some text';
-        }
-      },
-      onSaved: (value) => name = value,
-    );
+  Widget firstColumn() {
+    return Container(
+        decoration: BoxDecoration(
+          color: Colors.teal,
+          border: Border.all(
+            color: Colors.grey,
+            width: 2,
+          ),
+          borderRadius: BorderRadius.circular(1.2),
+        ),
+        child: Row(
+            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+            children: <Widget>[
+              SizedBox(
+                width: 30,
+              ),
+              Text("ID", style: TextStyle(color: Colors.white)),
+              SizedBox(
+                width: 75,
+              ),
+              Text("Nombre", style: TextStyle(color: Colors.white)),
+              SizedBox(
+                width: 50,
+              ),
+              Text("Numer1", style: TextStyle(color: Colors.white)),
+              SizedBox(
+                width: 30,
+              ),
+              Text("Numer2", style: TextStyle(color: Colors.white)),
+            ]));
   }
-  
-  Widget buildItem(DocumentSnapshot doc){
-      return Container(
-  decoration: BoxDecoration(
-    color: Colors.grey[50],
-    border: Border.all(
-      color: Colors.grey,
-      width: 0.5,
-    ),
-    borderRadius: BorderRadius.circular(1.2),
-  ),
-  child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-      textDirection: TextDirection.ltr,
-        children: <Widget>[
-             (Text("${doc.data['name']}",)),
-               (Text("${doc.data['param2']}")),
-               (Text("${doc.data['param3']}")),
-               (Text("${doc.data['param4']}")),
-
-        
-       ])
-);
-  }
-  Widget firstColumn(){
-
-      return Container(
-  decoration: BoxDecoration(
-    color: Colors.teal,
-    border: Border.all(
-      color: Colors.grey,
-      width: 2,
-    ),
-    borderRadius: BorderRadius.circular(1.2),
-  ),
-      child: Row(
-       // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
-        children: <Widget>[
-             SizedBox(width: 30,),
-
-             Text("ID",style: TextStyle(color: Colors.white)),
-             SizedBox(width: 75,),
-               Text("Nombre",style: TextStyle(color: Colors.white)),
-             SizedBox(width: 50,),
-               Text("Numer1",style: TextStyle(color: Colors.white)),
-             SizedBox(width: 30,),
-
-               Text("Numer2",style: TextStyle(color: Colors.white)),
-
-        
-       ])
-);
-  }
-  // Row(
-  //       mainAxisAlignment: MainAxisAlignment.spaceAround,
-
-  //       children: <Widget>[
-  //            (Text("${doc.data['name']}",)),
-  //              (Text("${doc.data['param2']}",textAlign:TextAlign.start)),
-  //              (Text("${doc.data['param3']}")),
-  //              (Text("${doc.data['param4']}")),
-
-        
-  //       ]);
-  //  sortColumnIndex: 2,
-  //               sortAscending: false,
-  //               columns: [
-  //                 DataColumn(label: Text("Nombre")),
-  //                 DataColumn(label: Text("Apellido")),
-  //                 DataColumn(label: Text("Años"),),
-  //               ],
-  //               rows: [
-  //                 DataRow(
-  //                   selected: true,
-  //                  cells: [
-  //                   DataCell(Text("${doc.data['name']}")),
-  //                   DataCell(Text("${doc.data['param2']}")),
-  //                   DataCell(Text("${doc.data['param3']}"))
-  //                 ])
-  //               ],
-  // Card buildItem(DocumentSnapshot doc) {
-  //   return Card(
-  //     elevation: 0,
-  //     color: Colors.transparent,
-  //     child: Padding(
-  //       padding: const EdgeInsets.all(3),
-  //       child: Column(
-  //         crossAxisAlignment: CrossAxisAlignment.start,
-  //         children: <Widget>[
-  //           Text(
-  //             'name: ${doc.data['name']}' +
-  //                 '        ' +
-  //                 'param2: ${doc.data['param2']}' +
-  //                 '        ' +
-  //                 'param2: ${doc.data['param3']}' +
-  //                 '        ' +
-  //                 'param2: ${doc.data['param4']}',
-  //             style: TextStyle(fontSize: 12),
-  //           ),
-  //           SizedBox(height: 12),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
 
   void _openFileExplorer() async {
     if (_pickingType != FileType.custom || _hasValidMime) {
