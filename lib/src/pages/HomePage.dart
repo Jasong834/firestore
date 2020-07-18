@@ -78,7 +78,9 @@ class FirestoreCRUDPageState extends State<FirestoreCRUDPage> {
               itemCount: datos.length,
               itemBuilder: (context, i) => crearItem(context, datos[i]));
         } else {
-          return SizedBox();
+          return Center(
+            child: CircularProgressIndicator(),
+          );
         }
       },
     );

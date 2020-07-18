@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 class DetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    MediaQueryData queryData;
-    queryData = MediaQuery.of(context);
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -26,10 +25,9 @@ class DetailPage extends StatelessWidget {
             ),
           ),
           Positioned(
-              top: 20,
-              left: 0,
-              right: 0,
-              bottom: 300,
+              top: size.height * 0.035,
+              //left: size.width * 0.2,
+              right: size.width * 0.00010,
               child: Stack(
                 children: <Widget>[
                   Row(
