@@ -42,23 +42,19 @@ class _LoginPageState extends State<LoginPage> {
           end: Alignment.bottomLeft,
           stops: [0.1, 0.5, 0.7, 0.9],
           colors: [
-            Colors.yellow[800],
-            Colors.yellow[700],
-            Colors.yellow[600],
-            Colors.yellow[400],
+            Colors.blue[800],
+            Colors.blue[700],
+            Colors.blue[600],
+            Colors.blue[400],
           ],
         ),
       ),
       child: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            SafeArea(
-              child: Container(
-                height: size.height * 0.24,
-              ),
-            ),
             Container(
-              width: size.width * 0.85,
+              height: size.height * 0.80,
+              width: size.width * 2,
               margin: EdgeInsets.symmetric(vertical: 30.0),
               padding: EdgeInsets.symmetric(vertical: 50.0),
               decoration: BoxDecoration(
@@ -73,7 +69,14 @@ class _LoginPageState extends State<LoginPage> {
                   ]),
               child: Column(
                 children: <Widget>[
-                  SizedBox(height: 30.0),
+                  Text(
+                    'CCP',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 50,
+                        fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(height: 100.0),
                   _crearEmail(bloc),
                   SizedBox(height: 20.0),
                   _crearPassword(bloc),
