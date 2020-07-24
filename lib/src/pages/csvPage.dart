@@ -10,109 +10,92 @@ class CsvPage extends StatefulWidget {
 
 class CsvState extends State<CsvPage> {
   final db = Firestore.instance;
-  String names;
+  List test = [];
+  var name;
+  var campo1;
+  var campo2;
+  var campo3;
+  var campo4;
 
   @override
   Widget build(BuildContext context) {
     final String prodData = ModalRoute.of(context).settings.arguments;
+    name = prodData;
     return Scaffold(
-      appBar: AppBar(
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-              stops: [0.1, 0.5, 0.7, 0.9],
-              colors: [
-                Colors.blue[800],
-                Colors.blue[700],
-                Colors.blue[600],
-                Colors.blue[400],
-              ],
+        appBar: AppBar(
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                stops: [0.1, 0.5, 0.7, 0.9],
+                colors: [
+                  Colors.blue[800],
+                  Colors.blue[700],
+                  Colors.blue[600],
+                  Colors.blue[400],
+                ],
+              ),
             ),
           ),
+          title: Text('TABLE',
+              style: TextStyle(fontSize: 25, color: Colors.white)),
         ),
-        title: Text(
-          'TABLE',
-          style: TextStyle(fontSize: 25, color: Colors.white),
-        ),
-      ),
-      body: ListView(
-        padding: EdgeInsets.all(8),
-        children: <Widget>[
-          StreamBuilder<QuerySnapshot>(
-            stream: db.collection('$prodData').snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Column(
-                  children: <Widget>[
-                    firstColumn(),
-                    Column(
-                        children: snapshot.data.documents
-                            .map((doc) => buildItem(doc))
-                            .toList()),
-                  ],
-                );
-              } else {
-                return SizedBox();
-              }
-            },
-          )
-        ],
-      ),
+        body: getData());
+  }
+
+  getData() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: db.collection(name).snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          snapshot.data.documents.map((doc) => buildItem(doc)).toList();
+          return firstColumn();
+        } else {
+          return SizedBox();
+        }
+      },
     );
   }
 
-  Widget buildItem(DocumentSnapshot doc) {
-    return Container(
-        decoration: BoxDecoration(
-          color: Colors.grey[50],
-          border: Border.all(
-            color: Colors.grey,
-            width: 0.5,
-          ),
-          borderRadius: BorderRadius.circular(1.2),
-        ),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            textDirection: TextDirection.ltr,
-            children: <Widget>[
-              (Text(
-                "${doc.data['name']}",
-              )),
-              (Text("${doc.data['param2']}")),
-              (Text("${doc.data['param3']}")),
-              (Text("${doc.data['param4']}")),
-            ]));
+  buildItem(DocumentSnapshot doc) {
+    test.add(doc.data);
+    //print(doc.data['param4']);
+    campo1 = doc.data['name'];
+    campo2 = doc.data['param2'];
+    campo3 = doc.data['param3'];
+    campo4 = doc.data['param4'];
+    //print(campo2);
+
+    return SizedBox(
+      height: 0,
+      width: 0,
+    );
   }
 
   Widget firstColumn() {
-    return Container(
-        decoration: BoxDecoration(
-          color: Colors.blue[500],
-          border: Border.all(
-            color: Colors.grey,
-            width: 2,
-          ),
-          borderRadius: BorderRadius.circular(1.2),
-        ),
-        child: Row(children: <Widget>[
-          SizedBox(
-            width: 30,
-          ),
-          Text("ID", style: TextStyle(color: Colors.white, fontSize: 12)),
-          SizedBox(
-            width: 75,
-          ),
-          Text("Nombre", style: TextStyle(color: Colors.white, fontSize: 12)),
-          SizedBox(
-            width: 50,
-          ),
-          Text("Numer1", style: TextStyle(color: Colors.white, fontSize: 12)),
-          SizedBox(
-            width: 30,
-          ),
-          Text("Numer2", style: TextStyle(color: Colors.white, fontSize: 12)),
-        ]));
+    //print(test);
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: DataTable(
+            columns: [
+              DataColumn(label: Text('Dato1')),
+              DataColumn(label: Text('Dato2')),
+              DataColumn(label: Text('Dato3')),
+              DataColumn(label: Text('Dato4'))
+            ],
+            rows: test
+                .map((e) => DataRow(cells: [
+                      DataCell(Text(e['name'])),
+                      DataCell(Text(e['param2'])),
+                      DataCell(Text(e['param3'])),
+                      DataCell(Text(e['param4']))
+                    ]))
+                .toList()),
+      ),
+    );
   }
 }

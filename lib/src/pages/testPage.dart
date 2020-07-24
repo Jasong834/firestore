@@ -171,19 +171,19 @@ class TablePageState extends State<TablePage> {
           SizedBox(
             width: 30,
           ),
-          Text("ID", style: TextStyle(color: Colors.white, fontSize: 12)),
-          SizedBox(
-            width: 75,
-          ),
-          Text("Nombre", style: TextStyle(color: Colors.white, fontSize: 12)),
+          Text("ID", style: TextStyle(color: Colors.white)),
           SizedBox(
             width: 50,
           ),
-          Text("Numer1", style: TextStyle(color: Colors.white, fontSize: 12)),
+          Text("Nombre", style: TextStyle(color: Colors.white)),
+          SizedBox(
+            width: 50,
+          ),
+          Text("Numer1", style: TextStyle(color: Colors.white)),
           SizedBox(
             width: 30,
           ),
-          Text("Numer2", style: TextStyle(color: Colors.white, fontSize: 12)),
+          Text("Numer2", style: TextStyle(color: Colors.white)),
         ]));
   }
 
